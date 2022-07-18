@@ -12,13 +12,36 @@
 
 #include "get_next_line.h"
 
+char	*store_extra(char *storage)
+{
+	int		i;
+	int		j;
+	char	*extra;
+
+	i = 0;
+	j = 0;
+	extra = NULL;
+	while (storage[i] != '\0' && storage[i] != '\n')
+		i++;
+	if (storage[i] == '\n')
+	{
+		i++;
+		extra = ft_calloc(ft_strlen(storage) - i + 1, sizeof(char));
+		while (storage[i] != '\0')
+			extra[j++] = storage[i++];
+	}
+	return (extra);
+}
+
 char	*return_line(char *storage)
 {
 	int		i;
 	char	*line;
 
 	i = 0;
-	line = ft_calloc(1, 1);
+	while (storage[i] != '\0' && storage[i] != '\n')
+		i++;
+	line = ft_calloc(i + 2, sizeof(char));
 	while (storage[i] != '\0' && storage[i] != '\n')
 	{
 		line[i] = storage[i];
@@ -29,26 +52,36 @@ char	*return_line(char *storage)
 	return (line);
 }
 
-char	*get_next_line(int fd)
+char	*read_file(int fd, char *buffer)
 {
-	char	*storage;
-	char	*buffer;
 	int		byteread;
+	char	*storage;
 
-	storage = 0;
-	if (!storage)
-		storage = ft_calloc(1, 1);
-	buffer = ft_calloc((BUFFER_SIZE + 1), sizeof(char));
 	byteread = 1;
 	while (byteread > 0)
 	{
 		byteread = read(fd, buffer, BUFFER_SIZE);
+		buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 		buffer[byteread] = '\0';
 		storage = ft_strjoin(storage, buffer);
 		if (ft_strchr(storage, '\n'))
-			storage = return_line(storage);
+			break ;
 	}
+	free (buffer);
 	return (storage);
+}
+
+char	*get_next_line(int fd)
+{
+	static char	*storage;
+	char		*line;
+
+	if (!storage)
+		storage = ft_calloc(1, 1);
+	storage = read_file(fd, storage);
+	line = return_line(storage);
+	storage = store_extra(storage);
+	return (line);
 }
 
 int	main(void)
