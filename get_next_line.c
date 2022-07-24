@@ -6,11 +6,20 @@
 /*   By: kcheong <kcheong@student.42kl.edu.my>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/13 14:51:04 by kcheong           #+#    #+#             */
-/*   Updated: 2022/07/23 19:21:53 by kcheong          ###   ########.fr       */
+/*   Updated: 2022/07/24 19:00:55 by kcheong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+char	*join_free(char *storage, char *buffer)
+{
+	char	*temp;
+
+	temp = ft_strjoin(storage, buffer);
+	free(storage);
+	return (temp);
+}
 
 // stores extra characters (after \n) so we can keep
 // and join them with the text being read next time.
@@ -23,6 +32,11 @@ char	*store_extra(char *storage)
 	i = 0;
 	while (storage[i] != '\0' && storage[i] != '\n')
 		i++;
+	if (!storage[i])
+	{
+		free(storage);
+		return (NULL);
+	}
 	extra = malloc((ft_strlen(storage) - i + 1) * sizeof(char));
 	i++;
 	j = 0;
@@ -39,6 +53,8 @@ char	*return_line(char *storage)
 	char	*line;
 
 	i = 0;
+	if (!storage[i])
+		return (NULL);
 	while (storage[i] != '\0' && storage[i] != '\n')
 		i++;
 	line = malloc((i + 2) * sizeof(char));
@@ -53,7 +69,6 @@ char	*return_line(char *storage)
 	return (line);
 }
 
-// reads the text file and join the text until it finds \n.
 char	*read_join(int fd, char *storage)
 {
 	int		byteread;
@@ -76,7 +91,7 @@ char	*read_join(int fd, char *storage)
 			storage = ft_strdup(buffer);
 		else
 		{
-			storage = ft_strjoin(storage, buffer);
+			storage = join_free(storage, buffer);
 			if (ft_strchr(storage, '\n'))
 				break ;
 		}
@@ -103,25 +118,28 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
-int	main(void)
-{
-	char *res;
+// int	main(void)
+// {
+// 	char *res;
 	
-	int	fd = open("test.txt", O_RDONLY);
-	res = get_next_line(fd);
-	printf("Result 1 = [%s]\n", res);
-	free(res);
-	res = get_next_line(fd);
-	printf("Result 2 = [%s]\n", res);
-	free(res);
-	res = get_next_line(fd);
-	printf("Result 3 = [%s]\n", res);
-	free(res);
-	res = get_next_line(fd);
-	printf("Result 4 = [%s]\n", res);
-	free(res);
-	// printf("%s", get_next_line(fd));
-	// get_next_line(fd);
-	// get_next_line(fd);
-	// get_next_line(fd);
-}
+// 	int	fd = open("test.txt", O_RDONLY);
+// 	res = get_next_line(fd);
+// 	printf("Result 1 = [%s]\n", res);
+// 	free(res);
+// 	res = get_next_line(fd);
+// 	printf("Result 2 = [%s]\n", res);
+// 	free(res);
+// 	res = get_next_line(fd);
+// 	printf("Result 3 = [%s]\n", res);
+// 	free(res);
+// 	res = get_next_line(fd);
+// 	printf("Result 4 = [%s]\n", res);
+// 	free(res);
+// 	res = get_next_line(fd);
+// 	printf("Result 5 = [%s]\n", res);
+// 	free(res);
+// 	// printf("%s", get_next_line(fd));
+// 	// get_next_line(fd);
+// 	// get_next_line(fd);
+// 	// get_next_line(fd);
+// }
