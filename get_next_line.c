@@ -6,7 +6,7 @@
 /*   By: kcheong <kcheong@student.42kl.edu.my>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/13 14:51:04 by kcheong           #+#    #+#             */
-/*   Updated: 2022/07/24 19:00:55 by kcheong          ###   ########.fr       */
+/*   Updated: 2022/07/25 00:28:46 by kcheong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ char	*get_next_line(int fd)
 	static char	*storage;
 	char		*line;
 
-	if (fd < 0 || fd > 1024)
+	if (fd < 0 || fd > 1024 || BUFFER_SIZE <= 0)
 		return (NULL);
 	storage = read_join(fd, storage);
 	if (!storage || *storage == '\0')
@@ -118,28 +118,28 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
-// int	main(void)
-// {
-// 	char *res;
+int	main(void)
+{
+	char *res;
 	
-// 	int	fd = open("test.txt", O_RDONLY);
-// 	res = get_next_line(fd);
-// 	printf("Result 1 = [%s]\n", res);
-// 	free(res);
-// 	res = get_next_line(fd);
-// 	printf("Result 2 = [%s]\n", res);
-// 	free(res);
-// 	res = get_next_line(fd);
-// 	printf("Result 3 = [%s]\n", res);
-// 	free(res);
-// 	res = get_next_line(fd);
-// 	printf("Result 4 = [%s]\n", res);
-// 	free(res);
-// 	res = get_next_line(fd);
-// 	printf("Result 5 = [%s]\n", res);
-// 	free(res);
-// 	// printf("%s", get_next_line(fd));
-// 	// get_next_line(fd);
-// 	// get_next_line(fd);
-// 	// get_next_line(fd);
-// }
+	int	fd = open("test.txt", O_RDONLY);
+	res = get_next_line(fd);
+	printf("Result 1 = [%s]\n", res);
+	free(res);
+	res = get_next_line(fd);
+	printf("Result 2 = [%s]\n", res);
+	free(res);
+	res = get_next_line(fd);
+	printf("Result 3 = [%s]\n", res);
+	free(res);
+	res = get_next_line(fd);
+	printf("Result 4 = [%s]\n", res);
+	free(res);
+	res = get_next_line(fd);
+	printf("Result 5 = [%s]\n", res);
+	free(res);
+	// printf("%s", get_next_line(fd));
+	// get_next_line(fd);
+	// get_next_line(fd);
+	// get_next_line(fd);
+}
