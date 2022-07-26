@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcheong <kcheong@student.42kl.edu.my>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/07/13 14:51:04 by kcheong           #+#    #+#             */
-/*   Updated: 2022/07/26 20:36:47 by kcheong          ###   ########.fr       */
+/*   Created: 2022/07/26 20:38:43 by kcheong           #+#    #+#             */
+/*   Updated: 2022/07/26 20:43:20 by kcheong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*join_free(char *storage, char *buffer)
 {
@@ -98,7 +98,7 @@ char	*read_join(int fd, char *storage, char *buffer)
 
 char	*get_next_line(int fd)
 {
-	static char	*storage;
+	static char	*storage[1024];
 	char		*line;
 	char		*buffer;
 
@@ -107,14 +107,14 @@ char	*get_next_line(int fd)
 	buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buffer)
 		return (NULL);
-	storage = read_join(fd, storage, buffer);
-	if (!storage || *storage == '\0')
+	storage[fd] = read_join(fd, storage[fd], buffer);
+	if (!storage[fd] || *storage[fd] == '\0')
 	{
 		free(storage);
 		return (NULL);
 	}
-	line = return_line(storage);
-	storage = store_extra(storage);
+	line = return_line(storage[fd]);
+	storage[fd] = store_extra(storage[fd]);
 	return (line);
 }
 

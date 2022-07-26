@@ -20,7 +20,7 @@
 # include <string.h>
 # include <stdint.h>
 
-char 	*get_next_line(int fd);
+char	*get_next_line(int fd);
 char	*ft_strchr(const char *s, int c);
 char	*ft_strjoin(char const *s1, char const *s2);
 size_t	ft_strlen(const char *s);
@@ -29,7 +29,3 @@ void	ft_bzero(void *s, size_t n);
 char	*ft_strdup(const char *s1);
 
 #endif
-
-
-
-
