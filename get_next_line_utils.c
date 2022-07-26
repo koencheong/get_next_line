@@ -6,7 +6,7 @@
 /*   By: kcheong <kcheong@student.42kl.edu.my>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/13 16:29:58 by kcheong           #+#    #+#             */
-/*   Updated: 2022/07/13 16:29:58 by kcheong          ###   ########.fr       */
+/*   Updated: 2022/07/26 14:58:11 by kcheong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,26 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
+char	*ft_strdup(const char *s1)
+{
+	char	*temp;
+	size_t	i;
+	size_t	s1len;
+
+	i = 0;
+	s1len = ft_strlen(s1);
+	temp = malloc(sizeof(char) * (s1len + 1));
+	if (!temp)
+		return (NULL);
+	while (s1[i])
+	{
+		temp[i] = s1[i];
+		i++;
+	}
+	temp[i] = '\0';
+	return (temp);
+}
+
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	size_t	s1len;
@@ -57,26 +77,4 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		new[i++] = *s2++;
 	new[i] = '\0';
 	return (new);
-}
-
-void	ft_bzero(void *s, size_t n)
-{
-	size_t	i;
-
-	i = 0;
-	while (i < n)
-		((unsigned char *)s)[i++] = '\0';
-}
-
-void	*ft_calloc(size_t count, size_t size)
-{
-	void	*temp;
-
-	temp = malloc(size * count);
-	if (count >= SIZE_MAX || size >= SIZE_MAX)
-		return (NULL);
-	if (!temp)
-		return (NULL);
-	ft_bzero(temp, count * size);
-	return (temp);
 }

@@ -6,12 +6,23 @@
 /*   By: kcheong <kcheong@student.42kl.edu.my>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/13 14:51:04 by kcheong           #+#    #+#             */
-/*   Updated: 2022/07/22 16:24:10 by kcheong          ###   ########.fr       */
+/*   Updated: 2022/07/26 16:27:31 by kcheong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
+char	*join_free(char *storage, char *buffer)
+{
+	char	*temp;
+
+	temp = ft_strjoin(storage, buffer);
+	free(storage);
+	return (temp);
+}
+
+// stores extra characters (after \n) so we can keep
+// and join them with the text being read next time.
 char	*store_extra(char *storage)
 {
 	int		i;
@@ -21,26 +32,33 @@ char	*store_extra(char *storage)
 	i = 0;
 	while (storage[i] != '\0' && storage[i] != '\n')
 		i++;
-	extra = ft_calloc((ft_strlen(storage) - i + 1), sizeof(char));
+	if (!storage[i])
+	{
+		free(storage);
+		return (NULL);
+	}
+	extra = malloc((ft_strlen(storage) - i + 1) * sizeof(char));
 	i++;
 	j = 0;
-	// printf("Storage that is being brought into store_extra = %s\n", storage);
 	while (storage[i] != '\0')
 		extra[j++] = storage[i++];
+	extra[j] = 0;
 	free(storage);
-	// printf("Extra = %s\n", extra);
 	return (extra);
 }
 
+// only returns one line from storage.
 char	*return_line(char *storage)
 {
 	int		i;
 	char	*line;
 
 	i = 0;
+	if (!storage[i])
+		return (NULL);
 	while (storage[i] != '\0' && storage[i] != '\n')
 		i++;
-	line = ft_calloc(i + 2, sizeof(char));
+	line = malloc((i + 2) * sizeof(char));
 	i = 0;
 	while (storage[i] != '\0' && storage[i] != '\n')
 	{
@@ -49,35 +67,34 @@ char	*return_line(char *storage)
 	}
 	if (storage[i] != '\0' && storage[i] == '\n')
 		line[i++] = '\n';
+	line[i] = 0;
 	return (line);
 }
 
-char	*read_file(int fd, char *storage)
+char	*read_join(int fd, char *storage, char *buffer)
 {
-	int		byteread;
-	char	*buffer;
+	int	byteread;
 
 	byteread = 1;
-	buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 	while (byteread > 0)
 	{
 		byteread = read(fd, buffer, BUFFER_SIZE);
-		// printf("[%s]\n", buffer);
+		if (byteread == -1)
+		{
+			free(buffer);
+			return (NULL);
+		}
 		buffer[byteread] = 0;
 		if (!storage)
-		{
 			storage = ft_strdup(buffer);
-			// printf("Initial storage = [%s]\n", storage);
-		}
 		else
 		{
-			storage = ft_strjoin(storage, buffer);
-			// printf("Read until new line is found = [%s]\n", storage);
+			storage = join_free(storage, buffer);
 			if (ft_strchr(storage, '\n'))
 				break ;
 		}
 	}
-	free (buffer);
+	free(buffer);
 	return (storage);
 }
 
@@ -85,34 +102,22 @@ char	*get_next_line(int fd)
 {
 	static char	*storage;
 	char		*line;
+	char		*buffer;
 
-	storage = read_file(fd, storage);
-	// printf("Storage while reading the file = %s\n", storage);
+	buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
+	if (!buffer)
+		return (NULL);
+	if (fd < 0 || fd > 1024 || BUFFER_SIZE <= 0)
+		return (NULL);
+	storage = read_join(fd, storage, buffer);
+	if (*storage == '\0')
+	{
+		free(storage);
+		return (NULL);
+	}
 	line = return_line(storage);
 	storage = store_extra(storage);
-	// printf("Line being returned = %s\n", line);
-	// printf("Storage after storing extra characters = %s\n", storage);
 	return (line);
-}
-
-char	*ft_strdup(const char *s1)
-{
-	char	*temp;
-	size_t	i;
-	size_t	s1len;
-
-	i = 0;
-	s1len = ft_strlen(s1);
-	temp = malloc(sizeof(char) * (s1len + 1));
-	if (!temp)
-		return (NULL);
-	while (s1[i])
-	{
-		temp[i] = s1[i];
-		i++;
-	}
-	temp[i] = '\0';
-	return (temp);
 }
 
 // int	main(void)
@@ -132,8 +137,12 @@ char	*ft_strdup(const char *s1)
 // 	res = get_next_line(fd);
 // 	printf("Result 4 = [%s]\n", res);
 // 	free(res);
+// 	// res = get_next_line(fd);
+// 	// printf("Result 5 = [%s]\n", res);
+// 	// free(res);
 // 	// printf("%s", get_next_line(fd));
 // 	// get_next_line(fd);
 // 	// get_next_line(fd);
 // 	// get_next_line(fd);
+// 	system("leaks a.out");
 // }
