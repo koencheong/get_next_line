@@ -6,7 +6,7 @@
 /*   By: kcheong <kcheong@student.42kl.edu.my>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/13 16:29:58 by kcheong           #+#    #+#             */
-/*   Updated: 2022/07/26 14:58:11 by kcheong          ###   ########.fr       */
+/*   Updated: 2022/07/26 16:39:05 by kcheong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ char	*ft_strchr(const char *s, int c)
 }
 
 size_t	ft_strlen(const char *s)
-{
+
 	size_t	i;
 
 	i = 0;
