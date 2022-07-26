@@ -6,7 +6,7 @@
 /*   By: kcheong <kcheong@student.42kl.edu.my>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/26 20:38:43 by kcheong           #+#    #+#             */
-/*   Updated: 2022/07/26 20:43:20 by kcheong          ###   ########.fr       */
+/*   Updated: 2022/07/26 21:19:03 by kcheong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ char	*get_next_line(int fd)
 	storage[fd] = read_join(fd, storage[fd], buffer);
 	if (!storage[fd] || *storage[fd] == '\0')
 	{
-		free(storage);
+		free(storage[fd]);
 		return (NULL);
 	}
 	line = return_line(storage[fd]);
@@ -123,23 +123,24 @@ char	*get_next_line(int fd)
 // 	char *res;
 	
 // 	int	fd = open("test.txt", O_RDONLY);
+// 	int	fd2 = open("test2.txt", O_RDONLY);
 	
 // 	res = get_next_line(fd);
 // 	printf("Result 1 = [%s]\n", res);
 // 	free(res);
-// 	res = get_next_line(fd);
+// 	res = get_next_line(fd2);
 // 	printf("Result 2 = [%s]\n", res);
 // 	free(res);
 // 	res = get_next_line(fd);
 // 	printf("Result 3 = [%s]\n", res);
 // 	free(res);
-// 	res = get_next_line(fd);
+// 	res = get_next_line(fd2);
 // 	printf("Result 4 = [%s]\n", res);
 // 	free(res);
 // 	res = get_next_line(fd);
 // 	printf("Result 5 = [%s]\n", res);
 // 	free(res);
-// 	res = get_next_line(fd);
+// 	res = get_next_line(fd2);
 // 	printf("Result 6 = [%s]\n", res);
 // 	free(res);
 // 	res = get_next_line(fd);
